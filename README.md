@@ -13,6 +13,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 
 ## AI Analysis
 This AI analysis is for informational purposes only and does not constitute medical advice. Please consult a healthcare professional for medical concerns.
+
 <img width="758" height="263" alt="image" src="https://github.com/user-attachments/assets/76fb2747-9a3b-4f82-926d-3fd7a4b140bc" />
 
 
