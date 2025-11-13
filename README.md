@@ -2,6 +2,17 @@
 
 A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis.
 
+## Fill form via Form Assistant
+<img width="750" height="634" alt="image" src="https://github.com/user-attachments/assets/e537155c-be70-4a13-a769-ef8d7d916e73" />
+## Headache History Chart
+<img width="763" height="219" alt="image" src="https://github.com/user-attachments/assets/f1e79eb3-4636-46ce-8b96-39b2f149f98c" />
+## Headache Log
+<img width="758" height="175" alt="image" src="https://github.com/user-attachments/assets/eedad995-d0a5-4a41-965f-9a2358dc278a" />
+## AI Analysis
+This AI analysis is for informational purposes only and does not constitute medical advice. Please consult a healthcare professional for medical concerns.
+<img width="758" height="263" alt="image" src="https://github.com/user-attachments/assets/76fb2747-9a3b-4f82-926d-3fd7a4b140bc" />
+
+
 ## ✨ Features
 
 ### 📊 Data Tracking
