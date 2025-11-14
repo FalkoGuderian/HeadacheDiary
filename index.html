@@ -30,6 +30,7 @@
 
     function getChatbotParsingPrompt(userInput, questions, currentStep) {
       const currentQuestion = questions[currentStep];
+<<<<<<< HEAD
       const today = new Date().toISOString().split('T')[0];
       return `You are an assistant that analyzes user inputs and converts them into structured data for a headache diary. Break down the input into the following fields: ${currentQuestion.fields.join(', ')}. Return the answer in JSON format, e.g. { "field1": "value1", "field2": "value2" }. If a field cannot be clearly filled, leave it empty ("").
 
@@ -40,6 +41,10 @@ IMPORTANT INSTRUCTIONS:
 - Handle both natural language and structured input (e.g., "Date 12.11.2025 Time 14:00 Duration 10 Intensity Mild").
 - Only extract information that is clearly mentioned in the user input.
 
+=======
+      return `You are an assistant that analyzes user inputs and converts them into structured data for a headache diary. Break down the input into the following fields: ${currentQuestion.fields.join(', ')}. Return the answer in JSON format, e.g. { "field1": "value1", "field2": "value2" }. If a field cannot be clearly filled, leave it empty ("").
+
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
 User input: "${userInput}"
 
 Fields: ${currentQuestion.fields.join(', ')}
@@ -95,6 +100,7 @@ ${historyText}`;
 
     // Chatbot Component
     const Chatbot = ({ formData, setFormData, apiKey, setChatbotOpen, setChatbotError }) => {
+<<<<<<< HEAD
       // Load saved chatbot state from localStorage
       const loadSavedState = () => {
         try {
@@ -110,6 +116,12 @@ ${historyText}`;
       const [userInput, setUserInput] = useState('');
       const [currentStep, setCurrentStep] = useState(savedState?.currentStep || 0);
       const [collectedData, setCollectedData] = useState(savedState?.collectedData || {});
+=======
+      const [messages, setMessages] = useState([]);
+      const [userInput, setUserInput] = useState('');
+      const [currentStep, setCurrentStep] = useState(0);
+      const [collectedData, setCollectedData] = useState({});
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
 
       // Question structure in groups
       const questions = [
@@ -130,7 +142,11 @@ ${historyText}`;
           fields: ['chocolateAmount', 'cheeseAmount', 'otherFoods', 'waterIntake', 'dehydrationSigns', 'snacks', 'mealRoutine']
         },
         {
+<<<<<<< HEAD
           prompt: "How much screen time did you have (hours per day)? Do you have allergies or intolerances? Were there medical tests (e.g. blood tests)? Were there environmental changes (e.g. new work)?",
+=======
+          prompt: "How much screen time did you have (hours per day)? Do you have allergies or intolerances? Were there medical tests (e.g. blood tests)? Were there environmental changes (e.g. new kindergarten)?",
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
           fields: ['screenTime', 'allergies', 'medicalTests', 'environmentChanges']
         }
       ];
@@ -181,6 +197,7 @@ ${historyText}`;
           const parsedData = JSON.parse(data.choices[0].message.content);
 
           // Aktualisiere gesammelte Daten
+<<<<<<< HEAD
           const newCollectedData = { ...collectedData, ...parsedData };
           setCollectedData(newCollectedData);
 
@@ -199,6 +216,21 @@ ${historyText}`;
               isBot: true,
               isOptions: true
             }]);
+=======
+          setCollectedData({ ...collectedData, ...parsedData });
+
+          // Gehe zum nächsten Schritt oder schließe den Chatbot
+          if (currentStep < questions.length - 1) {
+            setCurrentStep(currentStep + 1);
+            setMessages([...messages, { text: userInput, isBot: false }, { text: questions[currentStep + 1].prompt, isBot: true }]);
+          } else {
+            // Alle Fragen beantwortet, aktualisiere Formular
+            setFormData({ ...formData, ...collectedData });
+            setChatbotOpen(false);
+            setMessages([]);
+            setCurrentStep(0);
+            setCollectedData({});
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
           }
         } catch (error) {
           setChatbotError(`Error during processing: ${error.message}`);
@@ -210,6 +242,7 @@ ${historyText}`;
       return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg max-w-lg w-full max-h-[80vh] overflow-y-auto">
+<<<<<<< HEAD
             <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold">Form Assistant: New Entry</h3>
               <div className="flex gap-2">
@@ -298,6 +331,13 @@ ${historyText}`;
                       </button>
                     </div>
                   )}
+=======
+            <h3 className="text-xl font-semibold mb-4">Chatbot: New Entry</h3>
+            <div className="space-y-4">
+              {messages.map((msg, index) => (
+                <div key={index} className={`p-2 rounded ${msg.isBot ? 'bg-blue-100' : 'bg-gray-100 text-right'}`}>
+                  {msg.text}
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
                 </div>
               ))}
             </div>
@@ -681,9 +721,12 @@ ${historyText}`;
 
       return (
         <div className="container mx-auto p-4">
+<<<<<<< HEAD
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
             <p><strong>Disclaimer:</strong> This application is designed for personal use and educational purposes. For medical advice, please consult qualified healthcare professionals.</p>
           </div>
+=======
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
           <h1 className="text-2xl font-bold mb-4">🐻Headache Diary</h1>
 
           {/* API Key Configuration */}
@@ -718,7 +761,11 @@ ${historyText}`;
                 onClick={() => setChatbotOpen(true)}
                 className="bg-purple-500 text-white p-2 rounded hover:bg-purple-600"
               >
+<<<<<<< HEAD
                 {localStorage.getItem('chatbotState') ? 'Resume form assistant entry' : 'Create entry with form assistant'}
+=======
+                Create entry with chatbot
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
               </button>
             </div>
             {chatbotError && (
@@ -868,14 +915,22 @@ ${historyText}`;
                   <canvas ref={chartRef} className="max-h-[400px]"></canvas>
                 </div>
                 <div className="mb-8">
+<<<<<<< HEAD
                   <h3 className="text-lg font-semibold mb-2">AI Analysis via OpenRouter</h3>
                   <p className="text-sm text-gray-600 mb-4">This AI analysis is for informational purposes only and does not constitute medical advice. Please consult a healthcare professional for medical concerns.</p>
+=======
+                  <h3 className="text-lg font-semibold mb-2">OpenRouter Analysis</h3>
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
                   <div className="flex space-x-4 mb-4">
                     <button
                       onClick={analyzeWithOpenAI}
                       className="bg-indigo-500 text-white p-2 rounded hover:bg-indigo-600"
                     >
+<<<<<<< HEAD
                       Analyze
+=======
+                      Analyze with OpenRouter
+>>>>>>> 36834d89ea531b21c8ec4145cb905a3057ab4d69
                     </button>
                     {analysisResult && (
                       <button
