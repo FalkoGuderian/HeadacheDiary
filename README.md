@@ -16,7 +16,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 <img width="758" height="175" alt="image" src="https://github.com/user-attachments/assets/eedad995-d0a5-4a41-965f-9a2358dc278a" />
 
 ### AI Analysis
-<img width="758" height="263" alt="image" src="https://github.com/user-attachments/assets/76fb2747-9a3b-4f82-926d-3fd7a4b140bc" />
+<img width="758" alt="image" src="https://github.com/user-attachments/assets/0f49ee9b-0eb4-4586-a688-18bff7bfd0a3" />
 
 ## ✨ Features
 
