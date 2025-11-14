@@ -1,5 +1,7 @@
 # 🐻 Headache Diary
 
+> **Disclaimer:** This application is designed for personal use and educational purposes. For medical advice, please consult qualified healthcare professionals.
+
 A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis.
 
 ## ✨ Features
@@ -122,7 +124,3 @@ This project is open source and available under the [MIT License](LICENSE).
 - **No Tracking**: No analytics or tracking scripts
 - **AI Privacy**: Only sends data to OpenRouter during analysis (optional feature)
 - **Data Control**: Full control over your personal health data
-
----
-
-**Note**: This application is designed for personal use and educational purposes. For medical advice, please consult qualified healthcare professionals.
