@@ -36,6 +36,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 - **Progress Persistence**: Save and resume form assistant sessions at any time
 - **Medical Analysis**: OpenRouter-powered analysis to identify potential headache triggers and causes
 - **Personalized Recommendations**: AI-generated insights and prevention strategies
+- **Markdown Rendering**: Analysis results are displayed with formatted headings, lists, and bold text for better readability
 
 ### 📈 Visual Analytics
 - **Interactive Charts**: Time-series visualization of headache intensity patterns

@@ -11,6 +11,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.5/dist/purify.min.js"></script>
 </head>
 <body>
   <div id="root"></div>
@@ -678,6 +680,12 @@ ${historyText}`;
         URL.revokeObjectURL(url);
       };
 
+      // Function to render Markdown safely in HTML
+      const renderMarkdown = (markdownText) => {
+        const html = marked.parse(markdownText);
+        return DOMPurify.sanitize(html);
+      };
+
       return (
         <div className="container mx-auto p-4">
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
@@ -889,8 +897,8 @@ ${historyText}`;
                     <p className="text-red-500 mb-4">{analysisError}</p>
                   )}
                   {analysisResult && (
-                    <div className="bg-gray-100 p-4 rounded whitespace-pre-wrap">
-                      {analysisResult}
+                    <div className="bg-gray-100 p-4 rounded prose max-w-none">
+                      <div dangerouslySetInnerHTML={{ __html: renderMarkdown(analysisResult) }} />
                     </div>
                   )}
                 </div>
