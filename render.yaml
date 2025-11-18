@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: headache-diary
+    runtime: static
+    staticPath: .
+    headers:
+      - path: /*
+        name: cache-control
+        value: "public, max-age=3600"
