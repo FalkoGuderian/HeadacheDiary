@@ -2,6 +2,8 @@
 
 > **Disclaimer:** This application is designed for personal use and educational purposes. For medical advice, please consult qualified healthcare professionals.
 
+**Live Demo:** https://headachediary-ybla.onrender.com/
+
 A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis.
 
 ## Screenshots
@@ -84,6 +86,25 @@ npx http-server
 - **Lifestyle**: Sleep hours/quality, daily activities, screen time
 - **Diet**: Chocolate/cheese consumption, water intake, meal routines
 - **Medical**: Allergies, medical tests, environmental changes
+
+## 🚀 Deployment to Render.com
+
+This application is configured for easy deployment as a static site on Render.com.
+
+### Setup Steps:
+1. Ensure the repository contains the `render.yaml` configuration file in the root directory.
+2. In the Render.com dashboard, create a new Static Site.
+3. Connect your GitHub repository (`https://github.com/FalkoGuderian/HeadacheDiary`).
+4. Select the main branch and deploy.
+5. Render will automatically use the `render.yaml` settings to serve the static files.
+
+### Configuration Details:
+- **Runtime**: Static
+- **Build Command**: None (no build step required)
+- **Publish Directory**: Root directory (`.`)
+
+### Live Deployment:
+- **URL**: https://headachediary-ybla.onrender.com/
 
 ## 🛠️ Technologies Used
 
