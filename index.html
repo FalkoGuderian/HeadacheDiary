@@ -119,6 +119,10 @@ ${historyText}`;
       const [mediaRecorder, setMediaRecorder] = useState(null);
       const [audioChunks, setAudioChunks] = useState([]);
       const recordingIntervalRef = useRef(null);
+      const [autoVoiceMode, setAutoVoiceMode] = useState(false);
+      const [isSpeaking, setIsSpeaking] = useState(false);
+      const lastSpokenStep = useRef(-1); // Track which question was last spoken
+      const isProcessingAutoVoiceRef = useRef(false); // Prevent multiple simultaneous auto voice operations
 
       // Voice recognition function
       const startSpeechRecognition = async () => {
@@ -211,6 +215,11 @@ ${historyText}`;
           }
         };
 
+        // Store the recognition instance so we can potentially stop it later
+        if (!window.currentSpeechRecognition) {
+          window.currentSpeechRecognition = recognition;
+        }
+
         try {
           recognition.start();
           return true;
@@ -295,23 +304,23 @@ ${historyText}`;
       // Question structure in groups
       const questions = [
         {
-          prompt: "When did you have the headache? Please provide date (e.g. 2025-05-18), time (e.g. 14:30), duration in minutes, and intensity (mild, moderate, or severe).",
+          prompt: "When did you have the headache? Please provide date, time, duration in minutes, and intensity level.",
           fields: ['date', 'time', 'duration', 'intensity']
         },
         {
-          prompt: "What accompanying symptoms did you have (e.g. nausea, light sensitivity)? Was there a stress situation (e.g. argument with brother)? How was the interaction with the family (e.g. reaction to family situation)? Were there stress signs (e.g. anxiety, overload)?",
+          prompt: "What accompanying symptoms did you have? Was there a stress situation? How was the interaction with the family? Were there stress signs?",
           fields: ['symptoms', 'stressSituation', 'familyInteraction', 'stressSigns']
         },
         {
-          prompt: "How many hours did you sleep? How was the sleep quality (e.g. restless, frequent waking)? What daily activity did you perform (e.g. outdoor exercise)?",
+          prompt: "How many hours did you sleep? How was the sleep quality? What daily activity did you perform?",
           fields: ['sleepHours', 'sleepQuality', 'dailyActivity']
         },
         {
-          prompt: "How much chocolate (e.g. number of cookies) and cheese did you eat? What other foods did you consume? How much water did you drink (e.g. glasses per day)? Were there dehydration signs (e.g. dark urine)? What snacks did you eat in the evening? How was your meal routine (e.g. fixed or unstructured)?",
+          prompt: "How much chocolate and cheese did you eat? What other foods did you consume? How much water did you drink? Were there dehydration signs? What snacks did you eat in the evening? How was your meal routine?",
           fields: ['chocolateAmount', 'cheeseAmount', 'otherFoods', 'waterIntake', 'dehydrationSigns', 'snacks', 'mealRoutine']
         },
         {
-          prompt: "How much screen time did you have (hours per day)? Do you have allergies or intolerances? Were there medical tests (e.g. blood tests)? Were there environmental changes (e.g. new kindergarten)?",
+          prompt: "How much screen time did you have? Do you have allergies or intolerances? Were there medical tests? Were there environmental changes?",
           fields: ['screenTime', 'allergies', 'medicalTests', 'environmentChanges']
         }
       ];
@@ -323,17 +332,111 @@ ${historyText}`;
     }
   }, []);
 
-  // Listen for voice transcription events
-  useEffect(() => {
-    const handleVoiceTranscription = (event) => {
-      processTranscribedInput(event.detail);
-    };
 
-    window.addEventListener('voiceTranscriptionReceived', handleVoiceTranscription);
-    return () => {
-      window.removeEventListener('voiceTranscriptionReceived', handleVoiceTranscription);
-    };
-  }, [currentStep, collectedData]);
+
+  // Handle auto voice mode toggle: stop ongoing speech/recording when disabled
+  useEffect(() => {
+    if (!autoVoiceMode) {
+      // Stop any ongoing speech synthesis
+      if ('speechSynthesis' in window && window.speechSynthesis.pending || window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        setIsSpeaking(false);
+      }
+
+      // Try to abort and cleanup any ongoing voice recognition
+      try {
+        // Stop and clean up current recognition
+        if (window.currentSpeechRecognition) {
+          if (window.currentSpeechRecognition.abort) {
+            window.currentSpeechRecognition.abort();
+          }
+          // Clear all event handlers to prevent any further processing
+          window.currentSpeechRecognition.onstart = null;
+          window.currentSpeechRecognition.onresult = null;
+          window.currentSpeechRecognition.onend = null;
+          window.currentSpeechRecognition.onerror = null;
+          delete window.currentSpeechRecognition;
+        }
+      } catch (error) {
+        console.log('Error cleaning up speech recognition:', error);
+      }
+
+      // Force cleanup state
+      setIsRecording(false);
+      setRecordingTime(0);
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+        recordingIntervalRef.current = null;
+      }
+
+      // Clear any voice transcription listeners
+      const event = new CustomEvent('voiceTranscriptionAbort');
+      window.dispatchEvent(event);
+    }
+  }, [autoVoiceMode]);
+
+  // Auto voice mode: speak question and start recording when question changes
+  useEffect(() => {
+    // Only trigger auto voice mode if:
+    // 1. Auto voice mode is enabled
+    // 2. Not currently speaking or recording
+    // 3. Not already processing an auto voice operation
+    // 4. This question hasn't been spoken before
+    if (autoVoiceMode && !isSpeaking && !isRecording && !isProcessingAutoVoiceRef.current && lastSpokenStep.current !== currentStep) {
+      const autoSpeakAndRecord = async () => {
+        try {
+          // Mark as processing to prevent race conditions
+          isProcessingAutoVoiceRef.current = true;
+          setIsSpeaking(true);
+          lastSpokenStep.current = currentStep;
+
+          // Check if speech synthesis is supported
+          if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(questions[currentStep].prompt);
+            utterance.rate = 0.9; // Slightly slower for clarity
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            utterance.lang = 'en-US'; // You can make this configurable
+
+            utterance.onend = async () => {
+              setIsSpeaking(false);
+              isProcessingAutoVoiceRef.current = false;
+              // After speaking, automatically start voice recording only if auto mode is still enabled
+              if (autoVoiceMode) {
+                await startSpeechRecognition();
+              }
+            };
+
+            utterance.onerror = () => {
+              setIsSpeaking(false);
+              isProcessingAutoVoiceRef.current = false;
+              setChatbotError('Error speaking question. Voice recording will be available manually.');
+              // Fallback: start recording even if speech failed
+              startSpeechRecognition();
+            };
+
+            // Speak the question
+            window.speechSynthesis.speak(utterance);
+          } else {
+            setIsSpeaking(false);
+            isProcessingAutoVoiceRef.current = false;
+            setChatbotError('Text-to-speech is not supported in your browser. Voice recording will be available manually.');
+            // Fallback: start recording even if speech is not supported
+            await startSpeechRecognition();
+          }
+        } catch (error) {
+          setIsSpeaking(false);
+          isProcessingAutoVoiceRef.current = false;
+          setChatbotError(`Auto voice mode error: ${error.message}`);
+        }
+      };
+
+      // Only auto-speak if there's a question to ask (not the initial state)
+      if (currentStep >= 0 && messages.length > 0) {
+        autoSpeakAndRecord();
+      }
+    }
+  }, [currentStep, autoVoiceMode, isSpeaking, isRecording]);
 
       const handleUserInput = async (e) => {
         e.preventDefault();
@@ -411,6 +514,20 @@ ${historyText}`;
               <h3 className="text-xl font-semibold">AI Quick Fill Assistant</h3>
               <div className="flex gap-2">
                 <button
+                  onClick={() => setAutoVoiceMode(!autoVoiceMode)}
+                  className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 font-medium text-sm ${
+                    autoVoiceMode
+                      ? 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700'
+                      : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                  title={autoVoiceMode ? 'Disable auto voice mode' : 'Enable auto voice mode'}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                  </svg>
+                  Auto Voice: {autoVoiceMode ? 'ON' : 'OFF'}
+                </button>
+                <button
                   onClick={() => {
                     // Save current data to form and chatbot state to localStorage
                     setFormData({ ...formData, ...collectedData });
@@ -452,6 +569,14 @@ ${historyText}`;
                 <div key={index}>
                   <div className={`p-2 rounded ${msg.isBot ? 'bg-blue-100' : 'bg-gray-100 text-right'}`}>
                     {msg.text}
+                    {autoVoiceMode && msg.isBot && isSpeaking && index === messages.length - 1 && (
+                      <span className="ml-2 inline-flex items-center">
+                        <svg className="w-4 h-4 animate-pulse text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="8"></circle>
+                        </svg>
+                        <span className="ml-1 text-xs text-blue-600 font-medium">Speaking...</span>
+                      </span>
+                    )}
                   </div>
                   {msg.isOptions && (
                     <div className="flex flex-wrap gap-2 mt-2 ml-2">
@@ -817,73 +942,7 @@ ${historyText}`;
         }
       };
 
-      const encodeAudioToBase64 = (audioBlob) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const base64 = reader.result.split(',')[1];
-            resolve(base64);
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(audioBlob);
-        });
-      };
 
-      const processVoiceInput = async (audioBlob) => {
-        if (!apiKey) {
-          setChatbotError('Please enter your OpenRouter API key in the "Config & Data" tab to use voice transcription.');
-          return;
-        }
-
-        try {
-          const base64Audio = await encodeAudioToBase64(audioBlob);
-
-          const response = await fetch(window.AI_API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${apiKey}`,
-              'HTTP-Referer': window.location.origin,
-              'X-Title': 'Headache Diary'
-            },
-            body: JSON.stringify({
-              model: 'google/gemini-2.5-flash',
-              messages: [
-                {
-                  role: 'user',
-                  content: [
-                    {
-                      type: 'text',
-                      text: 'Please transcribe this audio file.',
-                    },
-                    {
-                      type: 'input_audio',
-                      inputAudio: {
-                        data: base64Audio,
-                        format: 'wav',
-                      },
-                    },
-                  ],
-                },
-              ],
-              stream: false,
-            })
-          });
-
-          if (!response.ok) {
-            throw new Error(`Transcription API Error: ${response.status} ${response.statusText}`);
-          }
-
-          const data = await response.json();
-          const transcribedText = data.choices[0].message.content;
-
-          // Pass the transcribed text to the Chatbot component by dispatching a custom event
-          window.dispatchEvent(new CustomEvent('voiceTranscriptionReceived', { detail: transcribedText }));
-
-        } catch (error) {
-          setChatbotError(`Voice transcription failed: ${error.message}`);
-        }
-      };
 
       const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

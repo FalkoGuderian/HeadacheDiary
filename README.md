@@ -9,7 +9,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 ## 🎨 Design Updates
 
 ### Professional Tab Interface
-- **Inspired by OGC Distance Tool**: Clean, professional tab design with intuitive navigation
+- **Design**: Clean, professional tab design with intuitive navigation
 - **Three Main Sections**:
   - **Record** (📋 icon): Data entry and quick fill assistant
   - **Analysis** (📊 icon): Charts, AI analysis, and data visualization
@@ -72,8 +72,10 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 
 ### 🎤 Voice Input Features
 - **Voice Recording**: Speak answers directly using the microphone button in the Quick Fill assistant
-- **Instant Transcription**: Automatic speech-to-text conversion with AI-powered processing
-- **Text-to-Speech**: Speaker button reads questions aloud for accessibility
+- **Browser-Native Speech Recognition**: Uses the browser's built-in Web Speech API for instant speech-to-text conversion
+- **Text-to-Speech**: Speaker button reads questions aloud for accessibility with natural speech patterns
+- **Auto Voice Mode**: Toggle hands-free interaction where questions are spoken automatically and voice recording starts after each question
+- **Smart Loop Prevention**: Advanced state management prevents repetitive question loops in auto voice mode
 - **Hands-Free Entry**: Perfect for users who prefer voice input or have typing difficulties
 - **Real-time Feedback**: Visual recording indicator with countdown timer
 
@@ -164,7 +166,7 @@ This application is configured for easy deployment as a static site on Render.co
 ## 🛠️ Technologies Used
 
 - **Frontend**: React 18, Babel, Tailwind CSS
-- **Voice Features**: Web Speech API (Speech Recognition & Text-to-Speech), OpenRouter API with Gemini (Speech-to-Text Transcription)
+- **Voice Features**: Web Speech API (Speech Recognition & Text-to-Speech)
 - **Charts**: Chart.js with date-fns adapter
 - **AI Integration**: OpenRouter API (Grok-4 model)
 - **Storage**: Browser Local Storage
@@ -195,9 +197,8 @@ Works in all modern browsers with enhanced features:
 
 ### Voice Features
 - **Voice Recording**: Chrome 100+ and Chromium-based browsers (Web Speech API)
-- **Speech Recognition**: Requires microphone access and HTTPS security context
+- **Speech Recognition**: Browser-native speech-to-text, requires microphone access and HTTPS security context
 - **Text-to-Speech**: Available in Chrome, Firefox, Safari, and Edge
-- **Transcription**: OpenRouter API integration with Gemini model for speech-to-text
 
 ### First-Time Setup
 When using voice features for the first time, you'll be prompted to allow microphone access. Make sure to:
@@ -210,7 +211,6 @@ When using voice features for the first time, you'll be prompted to allow microp
 - Working microphone or headset
 - Quiet environment for best accuracy
 - Chrome/Edge browsers for optimal speech recognition
-- Stable internet connection for transcription
 
 ## 🤝 Contributing
 
@@ -236,6 +236,6 @@ This project is open source and available under the [MIT License](LICENSE).
 - **Local Storage**: All headache data stored locally in your browser
 - **No Tracking**: No analytics or tracking scripts
 - **AI Privacy**: Only sends data to OpenRouter during analysis (optional feature)
-- **Voice Privacy**: Audio recordings are temporarily processed by Google Gemini via OpenRouter for transcription only, then discarded
+- **Voice Privacy**: Voice input is processed entirely within the browser using the Web Speech API - no audio is sent to external servers
 - **Data Control**: Full control over your personal health data
 - **HTTPS Required**: Voice features require secure connections (HTTPS or localhost)
