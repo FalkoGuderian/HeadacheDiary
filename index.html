@@ -38,7 +38,8 @@
 
 IMPORTANT INSTRUCTIONS:
 - For date fields: Convert relative dates like "today", "yesterday", "tomorrow" to YYYY-MM-DD format. Also handle European date formats like "12.11.2025" → "2025-11-12". Today's date is ${today}.
-- For time fields: Convert times like "2pm", "2:00 PM", "14:00" to 24-hour format (HH:MM). For example: "2pm" becomes "14:00", "9am" becomes "09:00".
+- For time fields: Convert times like "2pm", "2:00 PM", "14:00" to 24-hour format (HH:MM). For example: "2pm" becomes "14:00", "9am" becomes "09:00". Handle "now" as the current time.
+- For intensity fields: Map intensity descriptions to standard values - "mild"/"slight"/"minor" for mild, "moderate"/"medium"/"average" for moderate, "severe"/"extreme"/"strong"/"intense"/"very strong"/"terrible" for severe.
 - For duration fields: Extract only the numeric value in minutes. For example: "10 minutes" or "10min" becomes 10, "2 hours" becomes 120.
 - Handle both natural language and structured input (e.g., "Date 12.11.2025 Time 14:00 Duration 10 Intensity Mild").
 - Only extract information that is clearly mentioned in the user input.
@@ -1140,6 +1141,7 @@ ${historyText}`;
                             </div>
                           )}
                         </div>
+                        <h3 className="text-lg font-semibold mb-4">Headache Log</h3>
                         <div className="bg-white rounded-lg shadow-md overflow-hidden">
                           <div className="overflow-x-auto">
                             <table className="w-full">
