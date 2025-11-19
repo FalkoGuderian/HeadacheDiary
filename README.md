@@ -15,18 +15,31 @@ A comprehensive web application for tracking and analyzing headache patterns, de
   - **Analysis** (📊 icon): Charts, AI analysis, and data visualization
   - **Config & Data** (⚙️ icon): API setup and data management
 
+### Modern Form Design
+- **Consistent Iconography**: Each form section has distinct, intuitive icons (clock, exclamation triangle, moon, shopping cart, fire)
+- **Color-Coded Sections**: Purple for timing, red for symptoms, green for sleep, orange for diet, indigo for health
+- **Professional Cards**: Clean, rounded sections with proper spacing and borders
+- **Grid Layouts**: Responsive grids that adapt to screen size
+
+### Enhanced Details Modal
+- **Modern Card-Based Design**: Professional header with gradient background and key info badges
+- **Consistent Categories**: Uses the same categories and icons as form sections
+- **Improved Typography**: Clear labels, structured data presentation, and uniform styling
+- **Responsive Layout**: Adapts beautifully to different screen sizes
+
 ### Intuitive Action Buttons
-- **👁️ View Details**: Examine complete entry information
-- **✏️ Edit Entry**: Modify existing entries (orange pencil icon)
+- **👁️ View Details**: Modern modal with complete entry information organized by categories
+- **✏️ Edit Entry**: Modify existing entries, auto-switches to Record tab (orange pencil icon)
 - **✅ Apply as New Entry**: Copy existing entry data to create new ones (uses copy icon for clarity), automatically switches to Record tab
-- **🗑️ Delete**: Remove entries with safety prompt
-- **💾 Save Progress**: Maintain state in chatbot assistant
-- **🔄 Resume/Cancel**: Control assistant sessions
+- **🗑️ Delete**: Remove entries with safety prompt (red trash icon)
+- **💾 Save Progress**: Maintain state in chatbot assistant (purple save icon)
+- **🔄 Restart/Resume/Cancel**: Control assistant sessions and form entry (orange restart icon)
 
 ### Enhanced User Experience
-- **Consistent Disclaimers**: Professional styling for medical disclaimers throughout
+- **Medical-Disclaimer Integration**: Professional styling for medical disclaimers throughout application
 - **Optimized Charts**: Clean y-axis labels with proper intensity scaling (Mild/Moderate/Severe)
-- **Responsive Layout**: Modern spacing and visual hierarchy
+- **Moderate Color Language**: Subtle color usage that maintains accessibility while keeping a clean design
+- **Responsive Layout**: Modern spacing and visual hierarchy across all screen sizes
 
 ## Screenshots
 
