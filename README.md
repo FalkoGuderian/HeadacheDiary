@@ -72,7 +72,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 
 ### ✨ AI-Powered Analysis & Help
 - **Help Dialog**: Comprehensive feature guide accessible via blue help button with question mark icon in header
-- **Quick Fill Assistant**: Interactive AI assistant that guides users through data entry with contextual questions (button located left of "Record" header)
+- **Quick Fill Assistant**: Interactive AI assistant that guides users through data entry with contextual questions - supports both text typing and voice recording (button located left of "Record" header with microphone and pencil icons)
 - **Smart Data Parsing**: Handles both natural language and structured input (e.g., "Date 12.11.2025 Time 14:00 Duration 10 Intensity Mild")
 - **Progress Persistence**: Save and resume form assistant sessions at any time
 - **✨ Magic Pattern Analysis**: OpenRouter-powered analysis with sparkle emoji to identify potential headache triggers and causes
@@ -111,7 +111,9 @@ npx http-server
 
 ### Adding Entries
 1. **Manual Entry**: Fill out the comprehensive form with headache details
-2. **Quick Fill Assistant**: Click "Quick Fill" (button left of "Record" header) for guided AI-powered data entry
+2. **Quick Fill Assistant**: Click "Quick Fill" (button with microphone and pencil icons left of "Record" header) for guided AI-powered data entry
+   - **Text Input**: Type your responses to the assistant's questions
+   - **Voice Input**: Click the microphone button in the chat to speak your answers (requires Chrome/Safari/Firefox browsers and microphone access)
 3. **Import CSV**: Upload existing headache data from CSV files
 
 ### Analyzing Patterns
@@ -148,6 +150,7 @@ This application is configured for easy deployment as a static site on Render.co
 ## 🛠️ Technologies Used
 
 - **Frontend**: React 18, Babel, Tailwind CSS
+- **Voice Recognition**: Web Speech API (Browser native)
 - **Charts**: Chart.js with date-fns adapter
 - **AI Integration**: OpenRouter API (Grok-4 model)
 - **Storage**: Browser Local Storage
@@ -169,10 +172,11 @@ To enable AI features:
 ## 📱 Browser Compatibility
 
 Works in all modern browsers:
-- Chrome 90+
+- Chrome 90+ (recommended for voice recording)
 - Firefox 88+
 - Safari 14+
 - Edge 90+
+- **Voice Recording**: Requires Chrome or Chromium-based browsers for best experience (Web Speech API)
 
 ## 🤝 Contributing
 

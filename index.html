@@ -114,6 +114,139 @@ ${historyText}`;
       const [userInput, setUserInput] = useState('');
       const [currentStep, setCurrentStep] = useState(savedState?.currentStep || 0);
       const [collectedData, setCollectedData] = useState(savedState?.collectedData || {});
+      const [isRecording, setIsRecording] = useState(false);
+      const [recordingTime, setRecordingTime] = useState(0);
+      const [mediaRecorder, setMediaRecorder] = useState(null);
+      const [audioChunks, setAudioChunks] = useState([]);
+      const recordingIntervalRef = useRef(null);
+
+      // Voice recognition function
+      const startSpeechRecognition = () => {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+          setChatbotError('Speech recognition is not supported in your browser. Please use Chrome or Chromium-based browsers for best results.');
+          return false;
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US'; // You can make this configurable
+
+        recognition.onstart = () => {
+          setIsRecording(true);
+          setRecordingTime(0);
+          recordingIntervalRef.current = setInterval(() => {
+            setRecordingTime(prev => prev + 1);
+          }, 1000);
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          if (transcript.trim()) {
+            // Feed the transcribed text into the existing text parsing logic
+            processTranscribedInput(transcript.trim());
+          } else {
+            setChatbotError('No speech detected. Please try speaking louder and closer to your microphone.');
+          }
+        };
+
+        recognition.onend = () => {
+          setIsRecording(false);
+          if (recordingIntervalRef.current) {
+            clearInterval(recordingIntervalRef.current);
+          }
+        };
+
+        recognition.onerror = (event) => {
+          setChatbotError(`Speech recognition error: ${event.error}`);
+          setIsRecording(false);
+          if (recordingIntervalRef.current) {
+            clearInterval(recordingIntervalRef.current);
+          }
+        };
+
+        try {
+          recognition.start();
+          return true;
+        } catch (error) {
+          setChatbotError(`Failed to start speech recognition: ${error.message}`);
+          return false;
+        }
+      };
+
+      const stopSpeechRecognition = () => {
+        // Note: SpeechRecognition doesn't have a direct stop method like MediaRecorder
+        // The recognition will stop automatically on end
+        setIsRecording(false);
+        if (recordingIntervalRef.current) {
+          clearInterval(recordingIntervalRef.current);
+        }
+      };
+
+      const processTranscribedInput = async (transcribedText) => {
+        // Add the transcribed text as a "user" message
+        setMessages(prev => [...prev, { text: `🎤 "${transcribedText}"`, isBot: false }]);
+
+        const currentQuestion = questions[currentStep];
+
+        // Use the existing parsing logic
+        try {
+          const response = await fetch(window.AI_API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`,
+              'HTTP-Referer': window.location.origin,
+              'X-Title': 'Headache Diary'
+            },
+            body: JSON.stringify({
+              model: AI_CONFIG.model,
+              messages: [
+                {
+                  role: 'user',
+                  content: getChatbotParsingPrompt(transcribedText, questions, currentStep)
+                }
+              ],
+              max_tokens: AI_CONFIG.maxTokens.chatbotParsing,
+              temperature: AI_CONFIG.temperature
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+          }
+
+          const data = await response.json();
+          const parsedData = JSON.parse(data.choices[0].message.content);
+
+          // Update collected data and continue as normal
+          const newCollectedData = { ...collectedData, ...parsedData };
+          setCollectedData(newCollectedData);
+
+          // Check if all fields are filled and advance or show options
+          const currentQuestionFields = questions[currentStep].fields;
+          const allFieldsFilled = currentQuestionFields.every(field => parsedData[field] && parsedData[field] !== "");
+
+          if (allFieldsFilled && currentStep < questions.length - 1) {
+            setCurrentStep(currentStep + 1);
+            setMessages(prev => [...prev, { text: questions[currentStep + 1].prompt, isBot: true }]);
+          } else {
+            setMessages(prev => [...prev, {
+              text: `Data collected so far: ${Object.keys(newCollectedData).length > 0 ? Object.keys(newCollectedData).join(', ') : 'none'}. What would you like to do?`,
+              isBot: true,
+              isOptions: true
+            }]);
+          }
+        } catch (error) {
+          if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+            setChatbotError('Please enter your OpenRouter API key in the "Config & Data" tab to use AI assistance.');
+          } else {
+            setChatbotError(`Error during processing: ${error.message}`);
+          }
+        }
+      };
 
       // Question structure in groups
       const questions = [
@@ -139,12 +272,24 @@ ${historyText}`;
         }
       ];
 
-      // Startnachricht
-      useEffect(() => {
-        if (currentStep === 0) {
-          setMessages([{ text: questions[0].prompt, isBot: true }]);
-        }
-      }, []);
+  // Startnachricht
+  useEffect(() => {
+    if (currentStep === 0) {
+      setMessages([{ text: questions[0].prompt, isBot: true }]);
+    }
+  }, []);
+
+  // Listen for voice transcription events
+  useEffect(() => {
+    const handleVoiceTranscription = (event) => {
+      processTranscribedInput(event.detail);
+    };
+
+    window.addEventListener('voiceTranscriptionReceived', handleVoiceTranscription);
+    return () => {
+      window.removeEventListener('voiceTranscriptionReceived', handleVoiceTranscription);
+    };
+  }, [currentStep, collectedData]);
 
       const handleUserInput = async (e) => {
         e.preventDefault();
@@ -284,6 +429,7 @@ ${historyText}`;
                         onClick={() => {
                           setFormData({ ...formData, ...collectedData });
                           setChatbotOpen(false);
+                          setIsRecording(false);
                           setMessages([]);
                           setCurrentStep(0);
                           setCollectedData({});
@@ -305,6 +451,7 @@ ${historyText}`;
 
                           setFormData({ ...formData, ...collectedData });
                           setChatbotOpen(false);
+                          setIsRecording(false);
                         }}
                         className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium text-sm"
                       >
@@ -316,24 +463,63 @@ ${historyText}`;
               ))}
             </div>
             <form onSubmit={handleUserInput} className="mt-4">
-              <input
-                type="text"
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                className="w-full p-2 border rounded"
-                placeholder="Your answer..."
-              />
-              <div className="flex space-x-2 mt-2">
-                <button
-                  type="submit"
-                  className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium"
-                >
-                  Send answer
-                </button>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                  className="w-full p-2 pr-12 border rounded"
+                  placeholder="Your answer..."
+                  disabled={isRecording}
+                />
                 <button
                   type="button"
-                  onClick={() => setChatbotOpen(false)}
+                  onClick={isRecording ? stopSpeechRecognition : startSpeechRecognition}
+                  className={`absolute right-2 top-1 p-1 rounded-full transition-all duration-200 ${
+                    isRecording
+                      ? 'bg-red-500 hover:bg-red-600 animate-pulse'
+                      : 'bg-purple-500 hover:bg-purple-600'
+                  }`}
+                  title={isRecording ? 'Stop recording' : 'Start voice recording'}
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Recording Status */}
+              {isRecording && (
+                <div className="mt-2 flex items-center gap-2 text-red-600 bg-red-50 p-2 rounded-lg">
+                  <svg className="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="8"></circle>
+                  </svg>
+                  <span className="text-sm font-medium">Recording... {recordingTime}s</span>
+                  <button
+                    onClick={stopSpeechRecognition}
+                    className="ml-auto text-red-700 hover:text-red-800 font-medium text-sm"
+                  >
+                    Stop
+                  </button>
+                </div>
+              )}
+
+              <div className="flex space-x-2 mt-2">
+                        <button
+                          type="button"
+                          onClick={() => setChatbotOpen(true)}
+                          className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium text-base"
+                        >
+                          Send
+                        </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setChatbotOpen(false);
+                    setIsRecording(false);
+                  }}
                   className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium"
+                  disabled={isRecording}
                 >
                   Cancel
                 </button>
@@ -351,6 +537,11 @@ ${historyText}`;
       const [chatbotOpen, setChatbotOpen] = useState(false);
       const [chatbotError, setChatbotError] = useState('');
       const [helpOpen, setHelpOpen] = useState(false);
+      const [isRecording, setIsRecording] = useState(false);
+      const [recordingTime, setRecordingTime] = useState(0);
+      const [mediaRecorder, setMediaRecorder] = useState(null);
+      const [audioChunks, setAudioChunks] = useState([]);
+      const recordingIntervalRef = useRef(null);
 
       const getCurrentDate = () => {
         const now = new Date();
@@ -518,6 +709,90 @@ ${historyText}`;
           }
         };
       }, [entries]);
+
+      // Voice recording functions
+      const startVoiceRecording = () => {
+        // Simply open the chatbot modal where the Web Speech API will handle voice recording
+        setChatbotOpen(true);
+      };
+
+      const stopVoiceRecording = () => {
+        if (mediaRecorder && isRecording) {
+          mediaRecorder.stop();
+          setIsRecording(false);
+          if (recordingIntervalRef.current) {
+            clearInterval(recordingIntervalRef.current);
+          }
+        }
+      };
+
+      const encodeAudioToBase64 = (audioBlob) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(audioBlob);
+        });
+      };
+
+      const processVoiceInput = async (audioBlob) => {
+        if (!apiKey) {
+          setChatbotError('Please enter your OpenRouter API key in the "Config & Data" tab to use voice transcription.');
+          return;
+        }
+
+        try {
+          const base64Audio = await encodeAudioToBase64(audioBlob);
+
+          const response = await fetch(window.AI_API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`,
+              'HTTP-Referer': window.location.origin,
+              'X-Title': 'Headache Diary'
+            },
+            body: JSON.stringify({
+              model: 'google/gemini-2.5-flash',
+              messages: [
+                {
+                  role: 'user',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'Please transcribe this audio file.',
+                    },
+                    {
+                      type: 'input_audio',
+                      inputAudio: {
+                        data: base64Audio,
+                        format: 'wav',
+                      },
+                    },
+                  ],
+                },
+              ],
+              stream: false,
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error(`Transcription API Error: ${response.status} ${response.statusText}`);
+          }
+
+          const data = await response.json();
+          const transcribedText = data.choices[0].message.content;
+
+          // Pass the transcribed text to the Chatbot component by dispatching a custom event
+          window.dispatchEvent(new CustomEvent('voiceTranscriptionReceived', { detail: transcribedText }));
+
+        } catch (error) {
+          setChatbotError(`Voice transcription failed: ${error.message}`);
+        }
+      };
 
       const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -896,13 +1171,20 @@ ${historyText}`;
                 <div id="content-entry" className="tab-content active">
                   <div className="max-w-5xl mx-auto space-y-6">
                     <div className="flex items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() => setChatbotOpen(true)}
-                        className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium text-base"
-                      >
-                        <span>{localStorage.getItem('chatbotState') ? 'Resume ✨ Quick Fill' : '✨ Quick Fill'}</span>
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setChatbotOpen(true)}
+                          className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium text-base"
+                          title="AI assisted form filling with text or voice"
+                        >
+                          <span>✎</span>
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                          </svg>
+                          <span className="hidden sm:inline">{localStorage.getItem('chatbotState') ? 'Resume' : 'Quick Fill'}</span>
+                        </button>
+                      </div>
                       <h2 className="text-2xl font-bold text-gray-900">{editingEntry !== null ? 'Edit Entry' : 'New Entry'}</h2>
                     </div>
                     {chatbotError && (
@@ -1344,7 +1626,7 @@ ${historyText}`;
                           </svg>
                           <div>
                             <h5 className="text-lg font-semibold text-gray-900 mb-2">AI Quick Fill Assistant</h5>
-                            <p className="text-gray-700">Use natural language to quickly fill in headache details. AI understands conversations and can fill multiple fields with a single description.</p>
+                            <p className="text-gray-700">Use natural language to quickly fill in headache details. AI understands conversations and can fill multiple fields with a single description. Supports both text typing and voice recording for hands-free entry.</p>
                           </div>
                         </div>
                       </div>
