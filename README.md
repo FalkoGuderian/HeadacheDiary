@@ -4,7 +4,7 @@
 
 **Live Demo:** https://headachediary-ybla.onrender.com/
 
-A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis. Features a modern tabbed interface inspired by professional distance measurement tools, with intuitive icons, consistent purple-to-indigo gradient styling, and streamlined navigation.
+A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis. Features a modern tabbed interface inspired by professional distance measurement tools, with intuitive icons, moderate color usage, and streamlined navigation.
 
 ## 🎨 Design Updates
 
@@ -32,8 +32,8 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 - **✏️ Edit Entry**: Modify existing entries, auto-switches to Record tab (orange pencil icon)
 - **✅ Apply as New Entry**: Copy existing entry data to create new ones (uses copy icon for clarity), automatically switches to Record tab
 - **🗑️ Delete**: Remove entries with safety prompt (red trash icon)
-- **💾 Save Progress**: Maintain state in chatbot assistant (purple save icon)
-- **🔄 Restart/Resume/Cancel**: Control assistant sessions and form entry (orange restart icon)
+- **💾 Save Progress**: Maintain state in chatbot assistant (moderate save icon)
+- **🔄 Restart/Resume/Cancel**: Control assistant sessions and form entry (moderate restart icon)
 
 ### Enhanced User Experience
 - **Medical-Disclaimer Integration**: Professional styling for medical disclaimers throughout application
