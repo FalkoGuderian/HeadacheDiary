@@ -1128,11 +1128,8 @@ ${historyText}`;
 
       // Tab switching function
       const switchTab = (tabId) => {
-        console.log('Switching to tab:', tabId);
         const tabs = document.querySelectorAll('.tab-button');
         const contents = document.querySelectorAll('.tab-content');
-
-        console.log('Found tabs:', tabs.length, 'contents:', contents.length);
 
         // Remove active class from all tabs and hide all content
         tabs.forEach(tab => {
@@ -1151,8 +1148,6 @@ ${historyText}`;
 
         const targetTab = document.getElementById(`tab-${tabId}`);
         const targetContent = document.getElementById(`content-${tabId}`);
-
-        console.log('Target tab:', targetTab, 'target content:', targetContent);
 
         // Add active class to target tab and show target content
         if (targetTab) {
@@ -1173,7 +1168,6 @@ ${historyText}`;
 
       // Initialize tabs on page load
       const initializeTabs = () => {
-        console.log('Initializing tabs on page load');
         switchTab('entry'); // Start with entry tab active
       };
 

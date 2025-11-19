@@ -87,6 +87,7 @@ const HeadacheDiary = () => {
             x: {
               type: 'time',
               time: {
+                unit: 'day',
                 parser: 'yyyy-MM-dd HH:mm',
                 tooltipFormat: 'dd.MM.yyyy HH:mm',
                 displayFormats: {
@@ -95,7 +96,18 @@ const HeadacheDiary = () => {
               },
               title: {
                 display: true,
-                text: 'Zeit'
+                text: 'Datum'
+              },
+              ticks: {
+                source: 'data',
+                callback: function(value, index, values) {
+                  const date = new Date(value);
+                  return date.toLocaleDateString('de-DE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  });
+                }
               }
             },
             y: {
