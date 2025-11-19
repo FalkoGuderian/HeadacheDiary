@@ -349,6 +349,7 @@ ${historyText}`;
       const chartInstanceRef = useRef(null);
       const [chatbotOpen, setChatbotOpen] = useState(false);
       const [chatbotError, setChatbotError] = useState('');
+      const [helpOpen, setHelpOpen] = useState(false);
 
       const getCurrentDate = () => {
         const now = new Date();
@@ -815,31 +816,42 @@ ${historyText}`;
       return (
         <div className="container mx-auto p-4 md:p-8">
           <div className="bg-white p-6 rounded-xl shadow-lg mb-8">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-              <div className="flex-1">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Headache Diary</h1>
-                {entries.length > 0 && (
-                  <div className="space-y-2">
-                    <div className="flex gap-6">
-                      <div className="flex items-center gap-2">
-                        <div className="text-lg font-bold text-blue-600">{entries.length}</div>
-                        <div className="text-sm text-gray-600">Total Entries</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="text-lg font-bold text-red-600">
-                          {entries.filter(e => e.intensity?.toLowerCase() === 'severe').length}
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                <div className="flex-1">
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Headache Diary</h1>
+                  {entries.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex gap-6">
+                        <div className="flex items-center gap-2">
+                          <div className="text-lg font-bold text-gray-400">{entries.length}</div>
+                          <div className="text-sm text-gray-600">Total Entries</div>
                         </div>
-                        <div className="text-sm text-gray-600">Severe Headaches</div>
+                        <div className="flex items-center gap-2">
+                          <div className="text-lg font-bold text-purple-700">
+                            {entries.filter(e => e.intensity?.toLowerCase() === 'severe').length}
+                          </div>
+                          <div className="text-sm text-gray-600">Severe Headaches</div>
+                        </div>
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Last entry: {entries[entries.length - 1]?.date} at {entries[entries.length - 1]?.time}
                       </div>
                     </div>
-                    <div className="text-sm text-gray-500">
-                      Last entry: {entries[entries.length - 1]?.date} at {entries[entries.length - 1]?.time}
-                    </div>
+                  )}
+                </div>
+                <div className="flex gap-4 items-center">
+                  <div className="bg-gray-50 border-l-4 border-gray-300 text-gray-700 p-4 flex-1" role="alert">
+                    <p><span className="bg-purple-600 text-white px-2 py-1 rounded font-semibold shadow-sm">Disclaimer:</span> This application is designed for personal use and educational purposes. For medical advice, please consult qualified healthcare professionals.</p>
                   </div>
-                )}
-              </div>
-              <div className="bg-gray-50 border-l-4 border-gray-300 text-gray-700 p-4 flex-shrink-0" role="alert">
-                <p><strong className="text-red-600">Disclaimer:</strong> This application is designed for personal use and educational purposes. For medical advice, please consult qualified healthcare professionals.</p>
+                  <button
+                    onClick={() => setHelpOpen(true)}
+                    className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium text-base"
+                    title="Quick Start & Features"
+                  >
+                    Quick Start
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -888,10 +900,7 @@ ${historyText}`;
                         onClick={() => setChatbotOpen(true)}
                         className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium text-base"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03 8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                        <span>{localStorage.getItem('chatbotState') ? 'Resume Quick Fill' : 'Quick Fill'}</span>
+                        <span>{localStorage.getItem('chatbotState') ? 'Resume ✨ Quick Fill' : '✨ Quick Fill'}</span>
                       </button>
                       <h2 className="text-2xl font-bold text-gray-900">{editingEntry !== null ? 'Edit Entry' : 'New Entry'}</h2>
                     </div>
@@ -902,14 +911,14 @@ ${historyText}`;
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                      {/* Timing & Intensity Section */}
-                      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                          </svg>
-                          Timing & Intensity
-                        </h3>
+                    {/* Timing & Intensity Section */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Timing & Intensity
+                      </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Date</label>
@@ -944,7 +953,7 @@ ${historyText}`;
                       {/* Symptoms & Stress Section */}
                       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                           </svg>
                           Symptoms & Stress Factors
@@ -952,19 +961,19 @@ ${historyText}`;
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Symptoms (nausea, sensitivity, etc.)</label>
-                            <input type="text" name="symptoms" value={formData.symptoms} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors" placeholder="e.g. nausea, light sensitivity" />
+                            <input type="text" name="symptoms" value={formData.symptoms} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. nausea, light sensitivity" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Stress Situation</label>
-                            <input type="text" name="stressSituation" value={formData.stressSituation} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors" placeholder="e.g. argument, deadline" />
+                            <input type="text" name="stressSituation" value={formData.stressSituation} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. argument, deadline" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Family Interactions</label>
-                            <input type="text" name="familyInteraction" value={formData.familyInteraction} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors" placeholder="e.g. reaction to family events" />
+                            <input type="text" name="familyInteraction" value={formData.familyInteraction} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. reaction to family events" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Stress Signs</label>
-                            <input type="text" name="stressSigns" value={formData.stressSigns} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors" placeholder="e.g. anxiety, tension" />
+                            <input type="text" name="stressSigns" value={formData.stressSigns} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. anxiety, tension" />
                           </div>
                         </div>
                       </div>
@@ -972,23 +981,23 @@ ${historyText}`;
                       {/* Lifestyle & Sleep Section */}
                       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.57 16.57c0 2.46-2 4.46-4.46 4.46S7.65 19.03 7.65 16.57V6.5c0-1.85 1.24-3.59 2.94-4.09 1.7-.5 3.48.29 4.18 1.99.7 1.7-.29 3.48-1.99 4.18C13.09 9.4 16.32 11 16.57 16.57zM13 7V4"></path>
+                          <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                           </svg>
                           Sleep & Daily Activity
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Sleep Hours</label>
-                            <input type="number" name="sleepHours" value={formData.sleepHours} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" placeholder="e.g. 8.5" />
+                            <input type="number" name="sleepHours" value={formData.sleepHours} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. 8.5" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Sleep Quality</label>
-                            <input type="text" name="sleepQuality" value={formData.sleepQuality} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" placeholder="e.g. restless, good" />
+                            <input type="text" name="sleepQuality" value={formData.sleepQuality} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. restless, good" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Daily Activity</label>
-                            <input type="text" name="dailyActivity" value={formData.dailyActivity} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" placeholder="e.g. outdoor exercise" />
+                            <input type="text" name="dailyActivity" value={formData.dailyActivity} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. outdoor exercise" />
                           </div>
                         </div>
                       </div>
@@ -996,7 +1005,7 @@ ${historyText}`;
                       {/* Diet & Hydration Section */}
                       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.2 2a1 1 0 001.8.856L9.8 13M16 13l-.8-3.408"></path>
                             <circle cx="9" cy="21" r="1"></circle>
                             <circle cx="20" cy="21" r="1"></circle>
@@ -1006,33 +1015,33 @@ ${historyText}`;
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Chocolate Amount</label>
-                            <input type="text" name="chocolateAmount" value={formData.chocolateAmount} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors" placeholder="e.g. 2 cookies" />
+                            <input type="text" name="chocolateAmount" value={formData.chocolateAmount} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. 2 cookies" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Cheese Amount</label>
-                            <input type="text" name="cheeseAmount" value={formData.cheeseAmount} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors" placeholder="e.g. one slice" />
+                            <input type="text" name="cheeseAmount" value={formData.cheeseAmount} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. one slice" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Other Foods</label>
-                            <input type="text" name="otherFoods" value={formData.otherFoods} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors" placeholder="e.g. nuts, pizza" />
+                            <input type="text" name="otherFoods" value={formData.otherFoods} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. nuts, pizza" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Evening Snacks</label>
-                            <input type="text" name="snacks" value={formData.snacks} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors" placeholder="e.g. fruit, chocolate" />
+                            <input type="text" name="snacks" value={formData.snacks} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. fruit, chocolate" />
                           </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Water Intake</label>
-                            <input type="text" name="waterIntake" value={formData.waterIntake} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. 6 glasses" />
+                            <input type="text" name="waterIntake" value={formData.waterIntake} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. 6 glasses" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Dehydration Signs</label>
-                            <input type="text" name="dehydrationSigns" value={formData.dehydrationSigns} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. dark urine" />
+                            <input type="text" name="dehydrationSigns" value={formData.dehydrationSigns} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. dark urine" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Meal Routine</label>
-                            <input type="text" name="mealRoutine" value={formData.mealRoutine} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. regular, irregular" />
+                            <input type="text" name="mealRoutine" value={formData.mealRoutine} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. regular, irregular" />
                           </div>
                         </div>
                       </div>
@@ -1040,27 +1049,27 @@ ${historyText}`;
                       {/* Environment & Health Section */}
                       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
                           </svg>
                           Environment & Health
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Screen Time (hours/day)</label>
-                            <input type="text" name="screenTime" value={formData.screenTime} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" placeholder="e.g. 4.5" />
+                            <input type="text" name="screenTime" value={formData.screenTime} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. 4.5" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Environmental Changes</label>
-                            <input type="text" name="environmentChanges" value={formData.environmentChanges} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" placeholder="e.g. new home, school changes" />
+                            <input type="text" name="environmentChanges" value={formData.environmentChanges} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. new home, school changes" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Allergies/Intolerances</label>
-                            <input type="text" name="allergies" value={formData.allergies} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" placeholder="e.g. seasonal, food allergies" />
+                            <input type="text" name="allergies" value={formData.allergies} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. seasonal, food allergies" />
                           </div>
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">Medical Tests</label>
-                            <input type="text" name="medicalTests" value={formData.medicalTests} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" placeholder="e.g. blood work, allergy tests" />
+                            <input type="text" name="medicalTests" value={formData.medicalTests} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" placeholder="e.g. blood work, allergy tests" />
                           </div>
                         </div>
                       </div>
@@ -1102,16 +1111,16 @@ ${historyText}`;
                           <canvas ref={chartRef} className="max-h-[400px]"></canvas>
                         </div>
                         <div className="mb-8">
-                          <h3 className="text-lg font-semibold mb-2">AI Analysis via OpenRouter</h3>
+                          <h3 className="text-lg font-semibold mb-2">Headache Pattern Analysis</h3>
                           <div className="bg-gray-50 border-l-4 border-gray-300 p-4 mb-4">
-                            <p><strong className="text-red-600">Disclaimer:</strong> This AI analysis is for informational purposes only and does not constitute medical advice. Please consult a healthcare professional for medical concerns.</p>
+                            <p><span className="bg-purple-600 text-white px-2 py-1 rounded font-semibold shadow-sm">Disclaimer:</span> This AI analysis is for informational purposes only and does not constitute medical advice. Please consult a healthcare professional for medical concerns.</p>
                           </div>
                           <div className="flex space-x-4 mb-4">
                             <button
                               onClick={analyzeWithOpenAI}
                               className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium"
                             >
-                              Analyze
+                              ✨Analyze
                             </button>
                             {analysisResult && (
                               <button
@@ -1134,7 +1143,7 @@ ${historyText}`;
                         <div className="bg-white rounded-lg shadow-md overflow-hidden">
                           <div className="overflow-x-auto">
                             <table className="w-full">
-                              <thead className="bg-gray-50 border-b border-gray-200">
+                              <thead className="bg-indigo-50 border-b border-gray-200">
                                 <tr>
                                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Date</th>
                                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Time</th>
@@ -1147,7 +1156,7 @@ ${historyText}`;
                               </thead>
                               <tbody className="divide-y divide-gray-200">
                                 {entries.map((entry, index) => (
-                                  <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                                  <tr key={index} className={`hover:bg-gray-50 transition-colors duration-200 ${index % 2 === 1 ? 'bg-blue-50' : ''}`}>
                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-900 font-medium">{entry.date}</td>
                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-900">{entry.time}</td>
                                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-700">{entry.duration || '-'}</td>
@@ -1223,18 +1232,16 @@ ${historyText}`;
                 <div id="content-management" className="tab-content">
                   <div className="space-y-6">
                     <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-400 mb-6">
-                      <h2 className="text-lg font-semibold mb-2">OpenRouter API Configuration</h2>
+                      <h2 className="text-lg font-semibold mb-2">OpenRouter API Key</h2>
                       <div className="flex items-center space-x-4">
                         <div className="flex-1">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            API Key
-                          </label>
                           <input
                             type="password"
                             value={apiKey}
                             onChange={handleApiKeyChange}
                             placeholder="Enter your OpenRouter API key"
                             className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            aria-label="API Key"
                           />
                         </div>
                         <div className="text-sm text-gray-600 max-w-md">
@@ -1282,6 +1289,153 @@ ${historyText}`;
             />
           )}
 
+          {helpOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-5 text-white">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <h3 className="text-xl font-semibold">Quick Start & Features</h3>
+                    </div>
+                    <button
+                      onClick={() => setHelpOpen(false)}
+                      className="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors"
+                      title="Close Help"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+                  <div className="space-y-8">
+                    {/* App Overview */}
+                    <div className="text-center">
+                      <h4 className="text-2xl font-bold text-gray-900 mb-2">Headache Diary</h4>
+                      <p className="text-lg text-gray-600">Comprehensive headache tracking and pattern analysis</p>
+                    </div>
+
+                    {/* Key Features */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                        <div className="flex items-start gap-4">
+                          <svg className="w-8 h-8 text-purple-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                          </svg>
+                          <div>
+                            <h5 className="text-lg font-semibold text-gray-900 mb-2">Comprehensive Entry Tracking</h5>
+                            <p className="text-gray-700">Record detailed headache information including timing, intensity, symptoms, stress factors, sleep, diet, and environmental conditions.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                        <div className="flex items-start gap-4">
+                          <svg className="w-8 h-8 text-purple-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03 8 9-8s9 3.582 9 8z"></path>
+                          </svg>
+                          <div>
+                            <h5 className="text-lg font-semibold text-gray-900 mb-2">AI Quick Fill Assistant</h5>
+                            <p className="text-gray-700">Use natural language to quickly fill in headache details. AI understands conversations and can fill multiple fields with a single description.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                        <div className="flex items-start gap-4">
+                          <svg className="w-8 h-8 text-purple-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                          </svg>
+                          <div>
+                            <h5 className="text-lg font-semibold text-gray-900 mb-2">✨ Headache Pattern Analysis</h5>
+                            <p className="text-gray-700">AI-powered analysis identifies likely causes of headaches (stress, diet, sleep, etc.) and provides personalized prevention recommendations.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                        <div className="flex items-start gap-4">
+                          <svg className="w-8 h-8 text-purple-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8H8V8h8z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2M16 8l3 3M8 8l-3-3"></path>
+                          </svg>
+                          <div>
+                            <h5 className="text-lg font-semibold text-gray-900 mb-2">Interactive Charts</h5>
+                            <p className="text-gray-700">Visualize headache patterns over time with interactive charts showing intensity trends and correlations.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                        <div className="flex items-start gap-4">
+                          <svg className="w-8 h-8 text-purple-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                          </svg>
+                          <div>
+                            <h5 className="text-lg font-semibold text-gray-900 mb-2">Data Management</h5>
+                            <p className="text-gray-700">Import/export headache data in CSV format for backup or integration. All data is stored locally in your browser.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                        <div className="flex items-start gap-4">
+                          <svg className="w-8 h-8 text-purple-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                          </svg>
+                          <div>
+                            <h5 className="text-lg font-semibold text-gray-900 mb-2">Privacy First</h5>
+                            <p className="text-gray-700">All headache data is stored locally in your browser. No personal data is sent to external servers without API consent.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Getting Started */}
+                    <div className="bg-gray-50 rounded-xl p-6">
+                      <h5 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Getting Started
+                      </h5>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <span className="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold">1</span>
+                          <p className="text-gray-700">Configure your OpenRouter API key in the "Config & Data" tab to enable AI features</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold">2</span>
+                          <p className="text-gray-700">Use "Record" tab to log headache details - try the AI Quick Fill assistant for fast entry</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold">3</span>
+                          <p className="text-gray-700">Visit "Analysis" tab regularly to get AI insights and track patterns over time</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="flex justify-end pt-6 border-t border-gray-200">
+                      <button
+                        onClick={() => setHelpOpen(false)}
+                        className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2 font-medium text-base"
+                      >
+                        Got it!
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {selectedEntry && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
               <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
@@ -1324,8 +1478,8 @@ ${historyText}`;
                     {/* Timing & Intensity Section */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                         Timing & Intensity
                       </h3>
@@ -1352,7 +1506,7 @@ ${historyText}`;
                     {/* Symptoms & Stress Section */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                         </svg>
                         Symptoms & Stress Factors
@@ -1377,14 +1531,14 @@ ${historyText}`;
                       </div>
                     </div>
 
-                    {/* Sleep & Daily Activity Section */}
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.57 16.57c0 2.46-2 4.46-4.46 4.46S7.65 19.03 7.65 16.57V6.5c0-1.85 1.24-3.59 2.94-4.09 1.7-.5 3.48.29 4.18 1.99.7 1.7-.29 3.48-1.99 4.18C13.09 9.4 16.32 11 16.57 16.57zM13 7V4"></path>
-                        </svg>
-                        Sleep & Daily Activity
-                      </h3>
+                      {/* Sleep & Daily Activity Section */}
+                      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                          <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                          </svg>
+                          Sleep & Daily Activity
+                        </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="p-4 bg-gray-50 rounded-lg">
                           <div className="text-sm font-medium text-gray-700">Sleep Hours</div>
@@ -1404,7 +1558,7 @@ ${historyText}`;
                     {/* Diet & Nutrition Section */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.2 2a1 1 0 001.8.856L9.8 13M16 13l-.8-3.408"></path>
                           <circle cx="9" cy="21" r="1"></circle>
                           <circle cx="20" cy="21" r="1"></circle>
@@ -1448,7 +1602,7 @@ ${historyText}`;
                     {/* Environment & Health Section */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
                         </svg>
                         Environment & Health

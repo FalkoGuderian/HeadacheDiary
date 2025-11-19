@@ -16,7 +16,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
   - **Config & Data** (⚙️ icon): API setup and data management
 
 ### Modern Form Design
-- **Consistent Iconography**: Each form section has distinct, intuitive icons (clock, exclamation triangle, moon, shopping cart, fire)
+- **Consistent Iconography**: Each form section has distinct, intuitive icons (calendar, exclamation triangle, clock, shopping cart, fire)
 - **Color-Coded Sections**: Purple for timing, red for symptoms, green for sleep, orange for diet, indigo for health
 - **Professional Cards**: Clean, rounded sections with proper spacing and borders
 - **Grid Layouts**: Responsive grids that adapt to screen size
@@ -27,7 +27,8 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 - **Improved Typography**: Clear labels, structured data presentation, and uniform styling
 - **Responsive Layout**: Adapts beautifully to different screen sizes
 
-### Intuitive Action Buttons
+### Intuitive Action Buttons & Help
+- **🔮 Help Button**: Blue help button with question mark icon in header opens comprehensive feature guide
 - **👁️ View Details**: Modern modal with complete entry information organized by categories
 - **✏️ Edit Entry**: Modify existing entries, auto-switches to Record tab (orange pencil icon)
 - **✅ Apply as New Entry**: Copy existing entry data to create new ones (uses copy icon for clarity), automatically switches to Record tab
@@ -35,7 +36,9 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 - **💾 Save Progress**: Maintain state in chatbot assistant (moderate save icon)
 - **🔄 Restart/Resume/Cancel**: Control assistant sessions and form entry (moderate restart icon)
 
-### Enhanced User Experience
+### Color Scheme & Visual Design
+- **Help Button**: Professional darker purple text and border for better visibility
+- **Statistics Display**: Total Entries in light grey for subtle appearance, Severe Headaches in dark purple for emphasis
 - **Medical-Disclaimer Integration**: Professional styling for medical disclaimers throughout application
 - **Optimized Charts**: Clean y-axis labels with proper intensity scaling (Mild/Moderate/Severe)
 - **Moderate Color Language**: Subtle color usage that maintains accessibility while keeping a clean design
@@ -67,11 +70,12 @@ A comprehensive web application for tracking and analyzing headache patterns, de
   - Dietary factors (chocolate, cheese, water intake)
   - Screen time and environmental changes
 
-### 🤖 AI-Powered Analysis
+### ✨ AI-Powered Analysis & Help
+- **Help Dialog**: Comprehensive feature guide accessible via blue help button with question mark icon in header
 - **Quick Fill Assistant**: Interactive AI assistant that guides users through data entry with contextual questions (button located left of "Record" header)
 - **Smart Data Parsing**: Handles both natural language and structured input (e.g., "Date 12.11.2025 Time 14:00 Duration 10 Intensity Mild")
 - **Progress Persistence**: Save and resume form assistant sessions at any time
-- **Medical Analysis**: OpenRouter-powered analysis to identify potential headache triggers and causes
+- **✨ Magic Pattern Analysis**: OpenRouter-powered analysis with sparkle emoji to identify potential headache triggers and causes
 - **Personalized Recommendations**: AI-generated insights and prevention strategies
 - **Markdown Rendering**: Analysis results are displayed with formatted headings, lists, and bold text for better readability
 
