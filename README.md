@@ -4,11 +4,33 @@
 
 **Live Demo:** https://headachediary-ybla.onrender.com/
 
-A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis.
+A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis. Features a modern tabbed interface inspired by professional distance measurement tools, with intuitive icons, consistent purple-to-indigo gradient styling, and streamlined navigation.
+
+## 🎨 Design Updates
+
+### Professional Tab Interface
+- **Inspired by OGC Distance Tool**: Clean, professional tab design with intuitive navigation
+- **Three Main Sections**:
+  - **New Entry** (➕ icon): Data entry and quick fill assistant
+  - **Analysis** (📊 icon): Charts, AI analysis, and data visualization
+  - **Config & Data** (⚙️ icon): API setup and data management
+
+### Intuitive Action Buttons
+- **👁️ View Details**: Examine complete entry information
+- **✏️ Edit Entry**: Modify existing entries (orange pencil icon)
+- **✅ Apply as New Entry**: Copy existing entry data to create new ones (uses copy icon for clarity), automatically switches to New Entry tab
+- **🗑️ Delete**: Remove entries with safety prompt
+- **💾 Save Progress**: Maintain state in chatbot assistant
+- **🔄 Resume/Cancel**: Control assistant sessions
+
+### Enhanced User Experience
+- **Consistent Disclaimers**: Professional styling for medical disclaimers throughout
+- **Optimized Charts**: Clean y-axis labels with proper intensity scaling (Mild/Moderate/Severe)
+- **Responsive Layout**: Modern spacing and visual hierarchy
 
 ## Screenshots
 
-### Form Assistant Entry
+### Quick Fill Entry
 <img width="750" height="634" alt="image" src="https://github.com/user-attachments/assets/e537155c-be70-4a13-a769-ef8d7d916e73" />
 
 ### Headache History Chart
@@ -33,7 +55,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
   - Screen time and environmental changes
 
 ### 🤖 AI-Powered Analysis
-- **Form Assistant**: Interactive AI assistant that guides users through data entry with contextual questions
+- **Quick Fill Assistant**: Interactive AI assistant that guides users through data entry with contextual questions (button located left of "New Entry" header)
 - **Smart Data Parsing**: Handles both natural language and structured input (e.g., "Date 12.11.2025 Time 14:00 Duration 10 Intensity Mild")
 - **Progress Persistence**: Save and resume form assistant sessions at any time
 - **Medical Analysis**: OpenRouter-powered analysis to identify potential headache triggers and causes
@@ -72,7 +94,7 @@ npx http-server
 
 ### Adding Entries
 1. **Manual Entry**: Fill out the comprehensive form with headache details
-2. **Form Assistant**: Click "Create entry with form assistant" for guided AI-powered data entry
+2. **Quick Fill Assistant**: Click "Quick Fill" (button left of "New Entry" header) for guided AI-powered data entry
 3. **Import CSV**: Upload existing headache data from CSV files
 
 ### Analyzing Patterns
@@ -119,8 +141,8 @@ This application is configured for easy deployment as a static site on Render.co
 ### AI Setup (Optional)
 To enable AI features:
 1. Get an API key from [OpenRouter.ai](https://openrouter.ai/)
-2. Enter your API key in the application
-3. Enable form assistant and analysis features
+2. Enter your API key in the application (Config & Data tab)
+3. Enable Quick Fill assistant and analysis features
 
 ### Data Backup
 - **Automatic**: Data saved locally in browser storage
