@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Headache Diary</title>
-  <link href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iOCIgY3k9IjgiIHI9IjYiIGZpbGw9IiM4QjQ1MTMiLz48Y2lyY2xlIGN4PSI1LjUiIGN5PSI1LjUiIHI9IjEuNSIgZmlsbD0iI0ZGRTNCRjUiLz48Y2lyY2xlIGN4PSIxMC41IiBjeT0iNS41IiByPSIxLjUiIGZpbGw9IiNGRkU0QjUiLz48Y2lyY2xlIGN4PSI1LjUiIGN5PSI1LjUiIHI9IjAuNSIgZmlsbD0iIzAwMCIvPjxjaXJjbGUgY3g9IjEwLjUiIGN5PSI1LjUiIHI9IjAuNSIgZmlsbD0iIzAwMCIvPjxjaXJjbGUgY3g9IjYiIGN5PSIxMCIgcj0iMSIgZmlsbD0iI0ZGRTNCRjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIxIiBmaWxsPSIjRkZFNEI1Ii8+PGVsbGlwc2UgY3g9IjQuNSIgY3k9IjciIHJ4PSIxIiByeT0iMiIgZmlsbD0iIzhCNDUxMyIvPjxlbGxpcHNlIGN4PSIxMS41IiBjeT0iNyIgcng9IjEiIHJ5PSIyIiBmaWxsPSIjOEI0NTEzIi8+</svg>" rel="icon">
+  <link href="headache_diary.png" rel="icon" type="image/png">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.9/babel.min.js"></script>
@@ -121,10 +121,25 @@ ${historyText}`;
       const recordingIntervalRef = useRef(null);
 
       // Voice recognition function
-      const startSpeechRecognition = () => {
+      const startSpeechRecognition = async () => {
+        // Clear any existing error first
+        setChatbotError('');
+
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
           setChatbotError('Speech recognition is not supported in your browser. Please use Chrome or Chromium-based browsers for best results.');
           return false;
+        }
+
+        // Check microphone permission first
+        try {
+          const permission = await navigator.permissions.query({ name: 'microphone' });
+          if (permission.state === 'denied') {
+            setChatbotError('Microphone permission denied. Please allow microphone access in your browser settings and try again.');
+            return false;
+          }
+        } catch (e) {
+          // Permission API might not be supported, continue anyway
+          console.log('Permission API not supported');
         }
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -160,7 +175,36 @@ ${historyText}`;
         };
 
         recognition.onerror = (event) => {
-          setChatbotError(`Speech recognition error: ${event.error}`);
+          let errorMessage = 'Speech recognition error: ';
+          switch (event.error) {
+            case 'not-allowed':
+              errorMessage += 'Microphone permission denied. Please allow microphone access and try again.';
+              break;
+            case 'no-speech':
+              errorMessage += 'No speech detected. Please speak clearly and try again.';
+              break;
+            case 'aborted':
+              errorMessage += 'Speech recognition was aborted.';
+              break;
+            case 'audio-capture':
+              errorMessage += 'Audio capture failed. Please check your microphone.';
+              break;
+            case 'network':
+              errorMessage += 'Network error during speech recognition.';
+              break;
+            case 'service-not-allowed':
+              errorMessage += 'Speech recognition service not allowed.';
+              break;
+            case 'bad-grammar':
+              errorMessage += 'Speech recognition grammar error.';
+              break;
+            case 'language-not-supported':
+              errorMessage += 'Language not supported.';
+              break;
+            default:
+              errorMessage += event.error || 'Unknown error occurred.';
+          }
+          setChatbotError(errorMessage);
           setIsRecording(false);
           if (recordingIntervalRef.current) {
             clearInterval(recordingIntervalRef.current);
@@ -364,7 +408,7 @@ ${historyText}`;
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg max-w-lg w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold">AI Quick Fill Assistant</h3>
+              <h3 className="text-xl font-semibold">AI Quick Fill Assistant</h3>
               <div className="flex gap-2">
                 <button
                   onClick={() => {
@@ -468,10 +512,57 @@ ${historyText}`;
                   type="text"
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
-                  className="w-full p-2 pr-12 border rounded"
+                  className="w-full p-2 pr-20 border rounded"
                   placeholder="Your answer..."
                   disabled={isRecording}
                 />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const questions = [
+                      {
+                        prompt: "When did you have the headache? Please provide date (e.g. 2025-05-18), time (e.g. 14:30), duration in minutes, and intensity (mild, moderate, or severe).",
+                        fields: ['date', 'time', 'duration', 'intensity']
+                      },
+                      {
+                        prompt: "What accompanying symptoms did you have (e.g. nausea, light sensitivity)? Was there a stress situation (e.g. argument with brother)? How was the interaction with the family (e.g. reaction to family situation)? Were there stress signs (e.g. anxiety, overload)?",
+                        fields: ['symptoms', 'stressSituation', 'familyInteraction', 'stressSigns']
+                      },
+                      {
+                        prompt: "How many hours did you sleep? How was the sleep quality (e.g. restless, frequent waking)? What daily activity did you perform (e.g. outdoor exercise)?",
+                        fields: ['sleepHours', 'sleepQuality', 'dailyActivity']
+                      },
+                      {
+                        prompt: "How much chocolate (e.g. number of cookies) and cheese did you eat? What other foods did you consume? How much water did you drink (e.g. glasses per day)? Were there dehydration signs (e.g. dark urine)? What snacks did you eat in the evening? How was your meal routine (e.g. fixed or unstructured)?",
+                        fields: ['chocolateAmount', 'cheeseAmount', 'otherFoods', 'waterIntake', 'dehydrationSigns', 'snacks', 'mealRoutine']
+                      },
+                      {
+                        prompt: "How much screen time did you have (hours per day)? Do you have allergies or intolerances? Were there medical tests (e.g. blood tests)? Were there environmental changes (e.g. new kindergarten)?",
+                        fields: ['screenTime', 'allergies', 'medicalTests', 'environmentChanges']
+                      }
+                    ];
+                    if ('speechSynthesis' in window) {
+                      const utterance = new SpeechSynthesisUtterance(questions[currentStep].prompt);
+                      utterance.rate = 0.9; // Slightly slower for clarity
+                      utterance.pitch = 1;
+                      utterance.volume = 1;
+                      utterance.lang = 'en-US'; // You can make this configurable
+
+                      // Speak the question
+                      window.speechSynthesis.speak(utterance);
+                    } else {
+                      setChatbotError('Text-to-speech is not supported in your browser.');
+                    }
+                  }}
+                  className="absolute right-10 top-1 p-1 rounded-full bg-blue-500 hover:bg-blue-600 transition-all duration-200"
+                  title="Read current question aloud"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 11v2c0 1.1.9 2 2 2h2.1l5.9 4V7l-5.9 4H5c-1.1 0-2 .9-2 2z"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 8c1.5 1 1.5 5 0 6"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 6c2.5 1.5 2.5 8.5 0 10"/>
+                  </svg>
+                </button>
                 <button
                   type="button"
                   onClick={isRecording ? stopSpeechRecognition : startSpeechRecognition}
@@ -1626,7 +1717,7 @@ ${historyText}`;
                           </svg>
                           <div>
                             <h5 className="text-lg font-semibold text-gray-900 mb-2">AI Quick Fill Assistant</h5>
-                            <p className="text-gray-700">Use natural language to quickly fill in headache details. AI understands conversations and can fill multiple fields with a single description. Supports both text typing and voice recording for hands-free entry.</p>
+                            <p className="text-gray-700">Use natural language to quickly fill in headache details. AI understands conversations and can fill multiple fields with a single description. Supports both text typing and voice recording for hands-free entry. Use the speaker button to have questions read aloud for accessibility.</p>
                           </div>
                         </div>
                       </div>

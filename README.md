@@ -70,9 +70,17 @@ A comprehensive web application for tracking and analyzing headache patterns, de
   - Dietary factors (chocolate, cheese, water intake)
   - Screen time and environmental changes
 
+### 🎤 Voice Input Features
+- **Voice Recording**: Speak answers directly using the microphone button in the Quick Fill assistant
+- **Instant Transcription**: Automatic speech-to-text conversion with AI-powered processing
+- **Text-to-Speech**: Speaker button reads questions aloud for accessibility
+- **Hands-Free Entry**: Perfect for users who prefer voice input or have typing difficulties
+- **Real-time Feedback**: Visual recording indicator with countdown timer
+
 ### ✨ AI-Powered Analysis & Help
 - **Help Dialog**: Comprehensive feature guide accessible via blue help button with question mark icon in header
 - **Quick Fill Assistant**: Interactive AI assistant that guides users through data entry with contextual questions - supports both text typing and voice recording (button located left of "Record" header with microphone and pencil icons)
+- **Text-to-Speech**: Read out questions aloud for accessibility (speaker button in chatbot header)
 - **Smart Data Parsing**: Handles both natural language and structured input (e.g., "Date 12.11.2025 Time 14:00 Duration 10 Intensity Mild")
 - **Progress Persistence**: Save and resume form assistant sessions at any time
 - **✨ Magic Pattern Analysis**: OpenRouter-powered analysis with sparkle emoji to identify potential headache triggers and causes
@@ -113,7 +121,13 @@ npx http-server
 1. **Manual Entry**: Fill out the comprehensive form with headache details
 2. **Quick Fill Assistant**: Click "Quick Fill" (button with microphone and pencil icons left of "Record" header) for guided AI-powered data entry
    - **Text Input**: Type your responses to the assistant's questions
-   - **Voice Input**: Click the microphone button in the chat to speak your answers (requires Chrome/Safari/Firefox browsers and microphone access)
+   - **Voice Input**: Click the microphone button (🎤) in the chat input area to speak your answers
+     - First time: You'll see a permission prompt - allow microphone access
+     - Recording appears with a red background and countdown timer
+     - Click microphone again or "Stop" to end recording
+     - Speech is automatically transcribed and processed
+   - **Text-to-Speech**: Click the speaker button (🔊) to hear questions read aloud
+   - **Progress Management**: Save progress and resume sessions anytime during data entry
 3. **Import CSV**: Upload existing headache data from CSV files
 
 ### Analyzing Patterns
@@ -150,7 +164,7 @@ This application is configured for easy deployment as a static site on Render.co
 ## 🛠️ Technologies Used
 
 - **Frontend**: React 18, Babel, Tailwind CSS
-- **Voice Recognition**: Web Speech API (Browser native)
+- **Voice Features**: Web Speech API (Speech Recognition & Text-to-Speech), OpenRouter API with Gemini (Speech-to-Text Transcription)
 - **Charts**: Chart.js with date-fns adapter
 - **AI Integration**: OpenRouter API (Grok-4 model)
 - **Storage**: Browser Local Storage
@@ -171,12 +185,32 @@ To enable AI features:
 
 ## 📱 Browser Compatibility
 
-Works in all modern browsers:
-- Chrome 90+ (recommended for voice recording)
+Works in all modern browsers with enhanced features:
+
+### Core Features (All Browsers)
+- Chrome 90+
 - Firefox 88+
 - Safari 14+
 - Edge 90+
-- **Voice Recording**: Requires Chrome or Chromium-based browsers for best experience (Web Speech API)
+
+### Voice Features
+- **Voice Recording**: Chrome 100+ and Chromium-based browsers (Web Speech API)
+- **Speech Recognition**: Requires microphone access and HTTPS security context
+- **Text-to-Speech**: Available in Chrome, Firefox, Safari, and Edge
+- **Transcription**: OpenRouter API integration with Gemini model for speech-to-text
+
+### First-Time Setup
+When using voice features for the first time, you'll be prompted to allow microphone access. Make sure to:
+- Allow microphone permissions in your browser
+- Have a working microphone connected
+- Use HTTPS (for live web) or localhost (for local development)
+- Close other applications using the microphone
+
+### Voice Feature Requirements
+- Working microphone or headset
+- Quiet environment for best accuracy
+- Chrome/Edge browsers for optimal speech recognition
+- Stable internet connection for transcription
 
 ## 🤝 Contributing
 
@@ -202,4 +236,6 @@ This project is open source and available under the [MIT License](LICENSE).
 - **Local Storage**: All headache data stored locally in your browser
 - **No Tracking**: No analytics or tracking scripts
 - **AI Privacy**: Only sends data to OpenRouter during analysis (optional feature)
+- **Voice Privacy**: Audio recordings are temporarily processed by Google Gemini via OpenRouter for transcription only, then discarded
 - **Data Control**: Full control over your personal health data
+- **HTTPS Required**: Voice features require secure connections (HTTPS or localhost)
