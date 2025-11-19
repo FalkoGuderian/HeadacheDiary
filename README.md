@@ -11,14 +11,14 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 ### Professional Tab Interface
 - **Inspired by OGC Distance Tool**: Clean, professional tab design with intuitive navigation
 - **Three Main Sections**:
-  - **New Entry** (➕ icon): Data entry and quick fill assistant
+  - **Record** (📋 icon): Data entry and quick fill assistant
   - **Analysis** (📊 icon): Charts, AI analysis, and data visualization
   - **Config & Data** (⚙️ icon): API setup and data management
 
 ### Intuitive Action Buttons
 - **👁️ View Details**: Examine complete entry information
 - **✏️ Edit Entry**: Modify existing entries (orange pencil icon)
-- **✅ Apply as New Entry**: Copy existing entry data to create new ones (uses copy icon for clarity), automatically switches to New Entry tab
+- **✅ Apply as New Entry**: Copy existing entry data to create new ones (uses copy icon for clarity), automatically switches to Record tab
 - **🗑️ Delete**: Remove entries with safety prompt
 - **💾 Save Progress**: Maintain state in chatbot assistant
 - **🔄 Resume/Cancel**: Control assistant sessions
@@ -55,7 +55,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
   - Screen time and environmental changes
 
 ### 🤖 AI-Powered Analysis
-- **Quick Fill Assistant**: Interactive AI assistant that guides users through data entry with contextual questions (button located left of "New Entry" header)
+- **Quick Fill Assistant**: Interactive AI assistant that guides users through data entry with contextual questions (button located left of "Record" header)
 - **Smart Data Parsing**: Handles both natural language and structured input (e.g., "Date 12.11.2025 Time 14:00 Duration 10 Intensity Mild")
 - **Progress Persistence**: Save and resume form assistant sessions at any time
 - **Medical Analysis**: OpenRouter-powered analysis to identify potential headache triggers and causes
@@ -94,7 +94,7 @@ npx http-server
 
 ### Adding Entries
 1. **Manual Entry**: Fill out the comprehensive form with headache details
-2. **Quick Fill Assistant**: Click "Quick Fill" (button left of "New Entry" header) for guided AI-powered data entry
+2. **Quick Fill Assistant**: Click "Quick Fill" (button left of "Record" header) for guided AI-powered data entry
 3. **Import CSV**: Upload existing headache data from CSV files
 
 ### Analyzing Patterns
