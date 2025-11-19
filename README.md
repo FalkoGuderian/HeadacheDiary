@@ -47,16 +47,16 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 ## Screenshots
 
 ### Quick Fill Entry
-<img width="1218" height="713" alt="image" src="https://github.com/user-attachments/assets/f2ff1128-1220-4f3e-9555-3d01dd1a1894" />
+<img width="1116" height="655" alt="image" src="https://github.com/user-attachments/assets/57322b19-856a-4595-a773-742f80d84ff7" />
 
 ### Headache History Chart
-<img width="1193" height="415" alt="image" src="https://github.com/user-attachments/assets/b45e5a2f-c287-4f74-a25b-cc305d57c831" />
+<img width="1116" height="383" alt="image" src="https://github.com/user-attachments/assets/72ec24f5-f3fc-4672-a5a3-25d2cfd99636" />
 
 ### Headache Log
-<img width="1163" height="312" alt="image" src="https://github.com/user-attachments/assets/ae810a51-1695-4cb3-8e22-238290a03eee" />
+<img width="1082" height="346" alt="image" src="https://github.com/user-attachments/assets/c45ab7ab-a1c2-4a4b-8991-ab124add80d3" />
 
 ### AI Analysis
-<img width="1158" height="403" alt="image" src="https://github.com/user-attachments/assets/f9a2d3ad-5211-4909-8a26-fabb4ab17d09" />
+<img width="1082" height="396" alt="image" src="https://github.com/user-attachments/assets/49328cfa-7b5e-409f-838a-0f86520284d1" />
 
 ## ✨ Features
 
