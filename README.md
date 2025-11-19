@@ -6,14 +6,27 @@
 
 A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis. Features a modern tabbed interface inspired by professional distance measurement tools, with intuitive icons, moderate color usage, and streamlined navigation.
 
+## 🆕 Recent Updates
+
+### 🚀 v2.1.0 - Enhanced Navigation & Voice Features
+- **✨ Hover Tooltips**: Added informative hover text on all main navigation tabs explaining their purpose
+- **🎯 Auto Voice Mode**: Hands-free AI assistant with automatic question speaking and voice recording
+- **📚 Improved Documentation**: Updated Quick Start to highlight auto voice mode as a key feature
+- **🎨 Enhanced UI/UX**: Better accessibility with clearer navigation guidance
+
 ## 🎨 Design Updates
 
 ### Professional Tab Interface
-- **Design**: Clean, professional tab design with intuitive navigation
+- **Design**: Clean, professional tab design with intuitive navigation and helpful hover tooltips
 - **Three Main Sections**:
-  - **Record** (📋 icon): Data entry and quick fill assistant
-  - **Analysis** (📊 icon): Charts, AI analysis, and data visualization
+  - **Record** (📋 icon): Log new headache details including date, time, intensity, symptoms, and triggers
+  - **Analysis** (📊 icon): View charts, analyze patterns, get AI insights and recommendations
   - **Config & Data** (⚙️ icon): API setup and data management
+
+### Enhanced Navigation Experience
+- **Hover Tooltips**: Informative tooltips on all main navigation tabs explaining their purpose and functionality
+- **Auto Voice Mode**: Hands-free AI assistant with automatic question speaking and voice recording
+- **Improved Help Integration**: Quick Start now highlights auto voice mode as a key feature
 
 ### Modern Form Design
 - **Consistent Iconography**: Each form section has distinct, intuitive icons (calendar, exclamation triangle, clock, shopping cart, fire)
@@ -74,7 +87,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 - **Voice Recording**: Speak answers directly using the microphone button in the Quick Fill assistant
 - **Browser-Native Speech Recognition**: Uses the browser's built-in Web Speech API for instant speech-to-text conversion
 - **Text-to-Speech**: Speaker button reads questions aloud for accessibility with natural speech patterns
-- **Auto Voice Mode**: Toggle hands-free interaction where questions are spoken automatically and voice recording starts after each question
+- **🎯 Auto Voice Mode**: Toggle hands-free interaction where questions are spoken automatically and voice recording starts after each question
 - **Smart Loop Prevention**: Advanced state management prevents repetitive question loops in auto voice mode
 - **Hands-Free Entry**: Perfect for users who prefer voice input or have typing difficulties
 - **Real-time Feedback**: Visual recording indicator with countdown timer
