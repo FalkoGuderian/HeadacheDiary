@@ -1661,20 +1661,20 @@ ${historyText}`;
                   <div className="space-y-6">
                     <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-400 mb-6">
                       <h2 className="text-lg font-semibold mb-2">OpenRouter API Key</h2>
-                      <div className="flex items-center space-x-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                         <div className="flex-1">
                           <input
                             type="password"
                             value={apiKey}
                             onChange={handleApiKeyChange}
                             placeholder="Enter your OpenRouter API key"
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                             aria-label="API Key"
                           />
                         </div>
-                        <div className="text-sm text-gray-600 max-w-md">
-                          <p>Required for quick fill and analysis functions.</p>
-                          <p>Get API key from <a href="https://openrouter.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">openrouter.ai</a>.</p>
+                        <div className="text-sm text-gray-600 sm:max-w-md">
+                          <p className="font-medium">Required for quick fill and analysis functions.</p>
+                          <p>Get API key from <a href="https://openrouter.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">openrouter.ai</a>.</p>
                         </div>
                       </div>
                     </div>
