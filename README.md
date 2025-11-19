@@ -8,11 +8,12 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 
 ## 🆕 Recent Updates
 
-### 🚀 v2.1.0 - Enhanced Navigation & Voice Features
-- **✨ Hover Tooltips**: Added informative hover text on all main navigation tabs explaining their purpose
-- **🎯 Auto Voice Mode**: Hands-free AI assistant with automatic question speaking and voice recording
-- **📚 Improved Documentation**: Updated Quick Start to highlight auto voice mode as a key feature
-- **🎨 Enhanced UI/UX**: Better accessibility with clearer navigation guidance
+### 🚀 v2.1.1 - Enhanced Navigation & Auto Voice Mode
+- **✨ Hover Tooltips**: Added informative hover text on all main navigation tabs (Record, Analysis, Config & Data) explaining their purpose
+- **🎯 Hands-Free Auto Voice Mode**: Toggle automatic AI assistant that speaks questions aloud and starts voice recording after each one
+- **📚 Enhanced Quick Start**: Updated help dialog to feature auto voice mode prominently as a key productivity feature
+- **🎨 Improved UX Settings**: Added user preferences to hide/show Quick Start button and disclaimer for cleaner interface
+- **🛠️ Better Accessibility**: Clearer navigation guidance with tooltips and improved feature documentation
 
 ## 🎨 Design Updates
 
@@ -87,10 +88,10 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 - **Voice Recording**: Speak answers directly using the microphone button in the Quick Fill assistant
 - **Browser-Native Speech Recognition**: Uses the browser's built-in Web Speech API for instant speech-to-text conversion
 - **Text-to-Speech**: Speaker button reads questions aloud for accessibility with natural speech patterns
-- **🎯 Auto Voice Mode**: Toggle hands-free interaction where questions are spoken automatically and voice recording starts after each question
+- **🎯 Auto Voice Mode**: Hands-free toggle where questions are spoken automatically and voice recording starts immediately after - ideal for users who want completely voice-driven entry
 - **Smart Loop Prevention**: Advanced state management prevents repetitive question loops in auto voice mode
-- **Hands-Free Entry**: Perfect for users who prefer voice input or have typing difficulties
-- **Real-time Feedback**: Visual recording indicator with countdown timer
+- **Real-time Feedback**: Visual recording indicator with countdown timer and speaking animations
+- **Smart Cleanup**: Automatic cleanup of voice sessions when mode is disabled or sessions end
 
 ### ✨ AI-Powered Analysis & Help
 - **Help Dialog**: Comprehensive feature guide accessible via blue help button with question mark icon in header
@@ -186,6 +187,11 @@ This application is configured for easy deployment as a static site on Render.co
 - **Styling**: Tailwind CSS for responsive design
 
 ## 🔧 Configuration
+
+### User Interface Preferences
+- **Quick Start Button**: Toggle visibility of the Quick Start button in the header via Help Dialog settings
+- **Disclaimer Display**: Show/hide the medical disclaimer in the header area
+- **Settings Persistence**: All UI preferences are automatically saved and persist between sessions
 
 ### AI Setup (Optional)
 To enable AI features:

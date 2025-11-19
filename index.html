@@ -928,6 +928,7 @@ ${historyText}`;
 
   const [entries, setEntries] = useState([]);
   const [hideQuickStartButton, setHideQuickStartButton] = useState(false);
+  const [hideDisclaimer, setHideDisclaimer] = useState(false);
   const [formData, setFormData] = useState({
         date: getCurrentDate(),
         time: getCurrentTime(),
@@ -952,11 +953,12 @@ ${historyText}`;
         medicalTests: '',
         environmentChanges: ''
       });
-      const [selectedEntry, setSelectedEntry] = useState(null);
-      const [editingEntry, setEditingEntry] = useState(null);
-      const [apiKey, setApiKey] = useState('');
-      const [analysisResult, setAnalysisResult] = useState('');
-      const [analysisError, setAnalysisError] = useState('');
+  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [editingEntry, setEditingEntry] = useState(null);
+  const [apiKey, setApiKey] = useState('');
+  const [analysisResult, setAnalysisResult] = useState('');
+  const [analysisError, setAnalysisError] = useState('');
+  const [disclaimerCollapsed, setDisclaimerCollapsed] = useState(false);
 
   useEffect(() => {
     const savedEntries = JSON.parse(localStorage.getItem('headacheEntries') || '[]');
@@ -965,6 +967,7 @@ ${historyText}`;
     // Load settings
     const savedSettings = JSON.parse(localStorage.getItem('headacheDiarySettings') || '{}');
     setHideQuickStartButton(savedSettings.hideQuickStartButton || false);
+    setHideDisclaimer(savedSettings.hideDisclaimer || false);
   }, []);
 
   useEffect(() => {
@@ -977,6 +980,13 @@ ${historyText}`;
     existingSettings.hideQuickStartButton = hideQuickStartButton;
     localStorage.setItem('headacheDiarySettings', JSON.stringify(existingSettings));
   }, [hideQuickStartButton]);
+
+  // Save settings when hideDisclaimer changes
+  useEffect(() => {
+    const existingSettings = JSON.parse(localStorage.getItem('headacheDiarySettings') || '{}');
+    existingSettings.hideDisclaimer = hideDisclaimer;
+    localStorage.setItem('headacheDiarySettings', JSON.stringify(existingSettings));
+  }, [hideDisclaimer]);
 
       // Initialize tabs when component mounts
       useEffect(() => {
@@ -1450,9 +1460,32 @@ ${historyText}`;
                         Quick Start
                       </button>
                     )}
-                    <div className="bg-gray-50 border-l-4 border-gray-300 text-gray-700 p-4 flex-1" role="alert">
-                      <p><span className="bg-purple-600 text-white px-2 py-1 rounded font-semibold shadow-sm">Disclaimer:</span> This application is designed for personal use and educational purposes. For medical advice, please consult qualified healthcare professionals.</p>
-                    </div>
+                    {!hideDisclaimer && (
+                      <div className="bg-gray-50 border-l-4 border-gray-300 text-gray-700 p-4 flex-1" role="alert">
+                        <div className="flex items-center justify-between">
+                          <p>
+                            <span className="bg-purple-600 text-white px-2 py-1 rounded font-semibold shadow-sm">Disclaimer:</span>
+                            {!disclaimerCollapsed && (
+                              <span className="ml-2">This application is designed for personal use and educational purposes. For medical advice, please consult qualified healthcare professionals.</span>
+                            )}
+                          </p>
+                          <button
+                            onClick={() => setDisclaimerCollapsed(!disclaimerCollapsed)}
+                            className="ml-3 p-1 rounded hover:bg-gray-200 transition-colors flex-shrink-0"
+                            title={disclaimerCollapsed ? "Show full disclaimer" : "Collapse disclaimer"}
+                          >
+                            <svg
+                              className={`w-4 h-4 transition-transform duration-200 ${disclaimerCollapsed ? 'rotate-0' : 'rotate-180'}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
               </div>
             </div>
@@ -1928,17 +1961,31 @@ ${historyText}`;
                     {/* Settings */}
                     <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg">
                       <h6 className="text-lg font-semibold text-gray-900 mb-3">Settings</h6>
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          id="hideQuickStartButton"
-                          checked={!hideQuickStartButton}
-                          onChange={(e) => setHideQuickStartButton(!e.target.checked)}
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                        />
-                        <label htmlFor="hideQuickStartButton" className="text-sm text-gray-700">
-                          Show "Quick Start" button in the header
-                        </label>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            id="hideQuickStartButton"
+                            checked={!hideQuickStartButton}
+                            onChange={(e) => setHideQuickStartButton(!e.target.checked)}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                          />
+                          <label htmlFor="hideQuickStartButton" className="text-sm text-gray-700">
+                            Show "Quick Start" button in the header
+                          </label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            id="hideDisclaimer"
+                            checked={!hideDisclaimer}
+                            onChange={(e) => setHideDisclaimer(!e.target.checked)}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                          />
+                          <label htmlFor="hideDisclaimer" className="text-sm text-gray-700">
+                            Show disclaimer in the header
+                          </label>
+                        </div>
                       </div>
                     </div>
 
