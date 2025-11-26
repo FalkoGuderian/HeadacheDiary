@@ -6,6 +6,9 @@
 
 A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis. Features a modern tabbed interface with intuitive icons, moderate color usage, and streamlined navigation.
 
+<img width="995" height="769" alt="image" src="https://github.com/user-attachments/assets/e10aa184-42f4-4b0c-842d-d523f51b6380" />
+
+
 ## 🆕 Recent Updates
 
 ### 🚀 v2.1.1 - Enhanced Navigation & Auto Voice Mode
@@ -61,7 +64,7 @@ A comprehensive web application for tracking and analyzing headache patterns, de
 ## Screenshots
 
 ### Quick Fill Entry
-<img width="1116" height="655" alt="image" src="https://github.com/user-attachments/assets/57322b19-856a-4595-a773-742f80d84ff7" />
+<img width="995" height="769" alt="image" src="https://github.com/user-attachments/assets/a64294cd-5863-4ae6-a6ce-6ba071c58dca" />
 
 ### Headache History Chart
 <img width="1116" height="383" alt="image" src="https://github.com/user-attachments/assets/72ec24f5-f3fc-4672-a5a3-25d2cfd99636" />
