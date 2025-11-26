@@ -4,7 +4,7 @@
 
 **Live Demo:** https://headachediary-ybla.onrender.com/
 
-A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis. Features a modern tabbed interface inspired by professional distance measurement tools, with intuitive icons, moderate color usage, and streamlined navigation.
+A comprehensive web application for tracking and analyzing headache patterns, designed to help identify triggers and improve headache management through detailed data collection and AI-powered analysis. Features a modern tabbed interface with intuitive icons, moderate color usage, and streamlined navigation.
 
 ## 🆕 Recent Updates
 
